@@ -56,7 +56,6 @@ public class CommandStart implements CommandExecutor {
                 }
             }
 
-            Main.setOn();
             pl.getServer().broadcastMessage(ChatColor.GOLD + "Swap every " + period/20 + " seconds with " + variation/20 +" variation, no nether.");
             pl.getServer().broadcastMessage(ChatColor.GOLD + "Starting Deathswap...");
             //teleport players to non liquid block, resets their stuff

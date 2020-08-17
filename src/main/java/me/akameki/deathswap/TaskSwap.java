@@ -29,10 +29,8 @@ public class TaskSwap extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!Main.isOn()) {
-            this.cancel();
-            return;
-        }
+        if (Main.allowedToRun(this)
+
         //creates a timer task that counts down and swaps players on 0
         new BukkitRunnable() {
             @Override
