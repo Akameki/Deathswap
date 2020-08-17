@@ -42,7 +42,7 @@ public class TaskSwap extends BukkitRunnable {
                     return;
                 }
                 if (count>0) {
-                    pl.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE + "Swapping in "+count);
+                    pl.getServer().broadcastMessage(ChatColor.YELLOW + "Swapping in "+count);
                     count--;
                 } else {
                     this.cancel();

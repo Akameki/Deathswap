@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TaskSwap2 extends BukkitRunnable {
+public class TaskSwap extends BukkitRunnable {
     private JavaPlugin pl;
     private int period;
     private int variation;
     private int count = 10;
 
-    public TaskSwap2(JavaPlugin pl) {
+    public TaskSwap(JavaPlugin pl) {
         this.pl = pl;
     }
-    public TaskSwap2(JavaPlugin pl, int period, int variation) {
+    public TaskSwap(JavaPlugin pl, int period, int variation) {
         this.pl = pl;
         this.period = period;
         this.variation = variation;
@@ -29,7 +29,7 @@ public class TaskSwap2 extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!Main2.isOn()) {
+        if (!Main.isOn()) {
             this.cancel();
             return;
         }
@@ -37,7 +37,7 @@ public class TaskSwap2 extends BukkitRunnable {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!Main2.isOn()) {
+                if (!Main.isOn()) {
                     this.cancel();
                     return;
                 }
@@ -72,7 +72,7 @@ public class TaskSwap2 extends BukkitRunnable {
                     //if has variation, recall TaskSwap with random delay
                     if (variation != 0) {
                         int randomVariation = (int) (Math.random() * variation * 2 - variation)+3;
-                        BukkitTask swap = new me.akameki.deathswap.TaskSwap(pl, period, variation).runTaskLater(pl, period+randomVariation - 10*20);
+                        BukkitTask swap = new TaskSwap(pl, period, variation).runTaskLater(pl, period+randomVariation - 10*20);
                     }
                 }
             }

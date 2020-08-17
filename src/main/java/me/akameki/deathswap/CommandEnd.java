@@ -18,7 +18,7 @@ public class CommandEnd implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("end")) {
             if (Main.isOn()) {
-                Main.setOn(false);
+                Main.setOff();
                 PlayerDeathEvent.getHandlerList().unregister(pl);
                 sender.sendMessage("Deathswap has been stopped!");
             } else {

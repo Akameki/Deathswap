@@ -1,5 +1,6 @@
 name: Deathswap
-version: 0.1.0
+version: 0.0.3
+author: Akameki
 main: me.akameki.deathswap.Main
 api-version: 1.16
 commands:

@@ -1,6 +1,5 @@
 package me.akameki.deathswap2;
 
-import me.akameki.deathswap.TaskSwap;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 //alternative Main combining listener and command classes
 //change main to me.akameki.deathswap2.Main2 in plugin.yml
-public class Main2 extends JavaPlugin implements Listener, CommandExecutor {
+public class Main extends JavaPlugin implements Listener, CommandExecutor {
     private static boolean on;
     public static boolean isOn() {
         return on;

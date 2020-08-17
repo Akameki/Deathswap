@@ -24,7 +24,8 @@ public class EventDeath implements Listener {
         //Declare winner, turn stuff off
         List<Player> alive = pl.getServer().getOnlinePlayers().stream().filter(p -> p.getGameMode()==GameMode.SURVIVAL).collect(Collectors.toList());
         if (alive.size() <= 1) {
-            Main.setOn(false);
+            pl.getServer().broadcastMessage("WOO!");
+            Main.setOff();
             Player winner = alive.get(0);
             pl.getServer().broadcastMessage(ChatColor.GOLD + winner.getDisplayName() + " has won!");
             PlayerDeathEvent.getHandlerList().unregister(pl);

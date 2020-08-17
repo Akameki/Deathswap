@@ -23,13 +23,13 @@ public class CommandStart implements CommandExecutor {
                 return true;
             }
 
-            int period = 15*20;
+            int period = 60*5*20;
             int variation = 0;
 
             //if sender gives period
             if (args.length>=1) {
                 try {
-                    period = Integer.valueOf(args[0])*20;
+                    period = Integer.parseInt(args[0])*20;
                     if (period < 10*20) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     sender.sendMessage(ChatColor.RED + "Enter valid time between swaps in seconds (at least 10)");
@@ -39,7 +39,7 @@ public class CommandStart implements CommandExecutor {
                 if (args.length >= 2) {
                     if (args.length > 2) return false;
                     try {
-                        variation = Integer.valueOf(args[1])*20;
+                        variation = Integer.parseInt(args[1])*20;
                         if (variation < 0 || variation > period-10*20) throw new NumberFormatException();
                     } catch (NumberFormatException e) {
                         sender.sendMessage(ChatColor.RED + "enter valid variation in seconds (at least 10 less than period)");
@@ -56,9 +56,9 @@ public class CommandStart implements CommandExecutor {
                 }
             }
 
-            Main.setOn(true);
-            pl.getServer().broadcastMessage(ChatColor.GOLD + "Swaps every " + period/20 + " seconds with " + variation/20 +" variation, no nether.");
-            pl.getServer().broadcastMessage(ChatColor.GOLD + "Good luck! >:D");
+            Main.setOn();
+            pl.getServer().broadcastMessage(ChatColor.GOLD + "Swap every " + period/20 + " seconds with " + variation/20 +" variation, no nether.");
+            pl.getServer().broadcastMessage(ChatColor.GOLD + "Starting Deathswap...");
             //teleport players to non liquid block, resets their stuff
             for (Player player : pl.getServer().getOnlinePlayers()) {
                 player.setGameMode(GameMode.SURVIVAL);
@@ -86,7 +86,7 @@ public class CommandStart implements CommandExecutor {
             }
 
             pl.getServer().getPluginManager().registerEvents(new EventDeath(pl), pl);
-
+            pl.getServer().broadcastMessage(ChatColor.GREEN + "Good luck! >:D");
             return true;
         }
         return false;
