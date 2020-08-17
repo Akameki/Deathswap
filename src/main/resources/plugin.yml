@@ -1,0 +1,11 @@
+name: Deathswap
+version: 0.1.0
+main: me.akameki.deathswap.Main
+api-version: 1.16
+commands:
+  start:
+    description: starts Deathswap
+    usage: /start [<seconds between swaps>] [<variation in time between swaps in seconds>]
+  end:
+    description: stops Deathswap
+    usage: /end
