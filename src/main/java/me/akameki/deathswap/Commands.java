@@ -7,25 +7,26 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class CommandStart implements CommandExecutor {
+public class Commands implements CommandExecutor {
     private final JavaPlugin pl;
-    public CommandStart(JavaPlugin pl) {
+
+    public Commands(JavaPlugin pl) {
         this.pl = pl;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        //start
         if (command.getName().equalsIgnoreCase("start")) {
             if (Main.isOn()) {
                 sender.sendMessage(ChatColor.RED + "Deathswap running, use /stop first!");
                 return true;
             }
-
             int period = 60*5*20;
             int variation = 0;
-
             //if sender gives period
             if (args.length>=1) {
                 try {
@@ -60,36 +61,62 @@ public class CommandStart implements CommandExecutor {
             pl.getServer().broadcastMessage(ChatColor.GOLD + "Starting Deathswap...");
             //teleport players to non liquid block, resets their stuff
             for (Player player : pl.getServer().getOnlinePlayers()) {
+                Location location;
+                do {
+                    location = new Location(player.getWorld(), Math.random()*4000 - 2000, 60.0, Math.random()*4000 - 2000);
+                    location.setY(player.getWorld().getHighestBlockYAt(location)+1);
+                } while (location.getBlock().isLiquid());
+                player.teleport(location);
                 player.setGameMode(GameMode.SURVIVAL);
                 player.setHealth(20);
                 player.setFoodLevel(20);
                 player.setSaturation(20);
                 player.getInventory().clear();
                 player.getWorld().setTime(0);
-                Location location;
-                do {
-                    location = new Location(player.getWorld(), Math.random() * 4000 - 2000, 60.0, Math.random() * 4000 - 2000);
-                    location.setY(player.getWorld().getHighestBlockYAt(location));
-                } while (location.getBlock().isLiquid());
-                location.setY(location.getY() + 1);
-                player.teleport(location);
             }
-
             //if no variation, run TaskSwap on loop
             //else run TaskSwap once after random delay, TaskSwap will detect if variation!=0 and call itself with random delays
+            BukkitRunnable task;
             if (variation == 0) {
-                BukkitRunnable task = new TaskSwap(pl);
-                Main.addTask(task);
+                task = new TaskSwap(pl);
                 task.runTaskTimer(pl, period - 10*20, period);
             } else {
                 int randomVariation = (int)(Math.random()*variation*2 - variation) + 3; //+3 ticks to be safe, might not be needed
-                BukkitRunnable task = new TaskSwap(pl, period, variation);
-                Main.addTask(task);
+                task = new TaskSwap(pl, period, variation);
                 task.runTaskLater(pl, period+randomVariation - 10*20);
             }
+            Main.addTask(task);
 
-            pl.getServer().getPluginManager().registerEvents(new EventDeath(pl), pl);
+            pl.getServer().getPluginManager().registerEvents(new Events(pl), pl);
+<<<<<<< HEAD:src/main/java/me/akameki/deathswap/Commands.java
+            pl.getServer().broadcastMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "Good luck! >:D");
+            return true;
+        }
+
+        //end
+        if (command.getName().equalsIgnoreCase("end")) {
+            if (Main.isOn()) {
+                Main.setOff();
+                PlayerDeathEvent.getHandlerList().unregister(pl);
+                pl.getServer().broadcastMessage("Deathswap has been stopped!");
+            } else {
+                sender.sendMessage(ChatColor.RED + "Deathswap is not running");
+            }
+=======
             pl.getServer().broadcastMessage(ChatColor.GREEN + "Good luck! >:D");
+>>>>>>> 9437a75a7c1ef221ea33c8bc451455715fd770dd:src/main/java/me/akameki/deathswap/CommandStart.java
+            return true;
+        }
+
+        //end
+        if (command.getName().equalsIgnoreCase("end")) {
+            if (Main.isOn()) {
+                Main.setOff();
+                PlayerDeathEvent.getHandlerList().unregister(pl);
+                pl.getServer().broadcastMessage("Deathswap has been stopped!");
+            } else {
+                sender.sendMessage(ChatColor.RED + "Deathswap is not running");
+            }
             return true;
         }
         return false;
