@@ -88,23 +88,7 @@ public class Commands implements CommandExecutor {
             Main.addTask(task);
 
             pl.getServer().getPluginManager().registerEvents(new Events(pl), pl);
-<<<<<<< HEAD:src/main/java/me/akameki/deathswap/Commands.java
             pl.getServer().broadcastMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "Good luck! >:D");
-            return true;
-        }
-
-        //end
-        if (command.getName().equalsIgnoreCase("end")) {
-            if (Main.isOn()) {
-                Main.setOff();
-                PlayerDeathEvent.getHandlerList().unregister(pl);
-                pl.getServer().broadcastMessage("Deathswap has been stopped!");
-            } else {
-                sender.sendMessage(ChatColor.RED + "Deathswap is not running");
-            }
-=======
-            pl.getServer().broadcastMessage(ChatColor.GREEN + "Good luck! >:D");
->>>>>>> 9437a75a7c1ef221ea33c8bc451455715fd770dd:src/main/java/me/akameki/deathswap/CommandStart.java
             return true;
         }
 
