@@ -8,10 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class CommandStart implements CommandExecutor {
-    private JavaPlugin pl;
+    private final JavaPlugin pl;
     public CommandStart(JavaPlugin pl) {
         this.pl = pl;
     }
@@ -78,10 +78,14 @@ public class CommandStart implements CommandExecutor {
             //if no variation, run TaskSwap on loop
             //else run TaskSwap once after random delay, TaskSwap will detect if variation!=0 and call itself with random delays
             if (variation == 0) {
-                BukkitTask swap = new TaskSwap(pl).runTaskTimer(pl, period - 10*20, period);
+                BukkitRunnable task = new TaskSwap(pl);
+                Main.addTask(task);
+                task.runTaskTimer(pl, period - 10*20, period);
             } else {
                 int randomVariation = (int)(Math.random()*variation*2 - variation) + 3; //+3 ticks to be safe, might not be needed
-                BukkitTask swap = new TaskSwap(pl, period, variation).runTaskLater(pl, period+randomVariation - 10*20);
+                BukkitRunnable task = new TaskSwap(pl, period, variation);
+                Main.addTask(task);
+                task.runTaskLater(pl, period+randomVariation - 10*20);
             }
 
             pl.getServer().getPluginManager().registerEvents(new EventDeath(pl), pl);

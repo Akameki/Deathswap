@@ -20,7 +20,7 @@ public class CommandEnd implements CommandExecutor {
             if (Main.isOn()) {
                 Main.setOff();
                 PlayerDeathEvent.getHandlerList().unregister(pl);
-                sender.sendMessage("Deathswap has been stopped!");
+                pl.getServer().broadcastMessage("Deathswap has been stopped!");
             } else {
                 sender.sendMessage(ChatColor.RED + "Deathswap is not running");
             }

@@ -6,14 +6,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TaskSwap extends BukkitRunnable {
-    private JavaPlugin pl;
+    private final JavaPlugin pl;
     private int period;
     private int variation;
     private int count = 10;
@@ -29,13 +28,16 @@ public class TaskSwap extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (Main.allowedToRun(this)
+        if (Main.notAllowedToRun(this)) {
+            this.cancel();
+            return;
+        }
 
         //creates a timer task that counts down and swaps players on 0
-        new BukkitRunnable() {
+        BukkitRunnable timer = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!Main.isOn()) {
+                if (Main.notAllowedToRun(this)) {
                     this.cancel();
                     return;
                 }
@@ -52,7 +54,6 @@ public class TaskSwap extends BukkitRunnable {
                     for (Player player : pl.getServer().getOnlinePlayers()) {
                         if (player.getGameMode().equals(GameMode.SURVIVAL)) {
                             players.add(player);
-
                         }
                     }
                     Collections.shuffle(players);
@@ -60,21 +61,20 @@ public class TaskSwap extends BukkitRunnable {
                         locations.add(player.getLocation());
                     }
                     for (int i = 0; i < players.size(); i++) {
-                        if (i == players.size() - 1) {
-                            players.get(i).teleport(locations.get(0));
-                        } else {
-                            players.get(i).teleport(locations.get(i + 1));
-                        }
+                        players.get(i).teleport(i==players.size()-1 ? locations.get(0) : locations.get(i+1));
                     }
 
                     //if has variation, recall TaskSwap with random delay
                     if (variation != 0) {
                         int randomVariation = (int) (Math.random() * variation * 2 - variation)+3;
-                        BukkitTask swap = new TaskSwap(pl, period, variation).runTaskLater(pl, period+randomVariation - 10*20);
+                        BukkitRunnable task = new TaskSwap(pl, period, variation);
+                        Main.addTask(task);
+                        task.runTaskLater(pl, period+randomVariation - 10*20);
                     }
                 }
             }
-        }.runTaskTimer(pl, 0, 20);
-
+        };
+        Main.addTask(timer);
+        timer.runTaskTimer(pl, 0, 20);
     }
 }

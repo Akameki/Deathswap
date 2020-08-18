@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EventDeath implements Listener {
-    private JavaPlugin pl;
+    private final JavaPlugin pl;
     public EventDeath(JavaPlugin pl) {
         this.pl = pl;
     }
@@ -23,12 +23,15 @@ public class EventDeath implements Listener {
         player.setGameMode(GameMode.SPECTATOR);
         //Declare winner, turn stuff off
         List<Player> alive = pl.getServer().getOnlinePlayers().stream().filter(p -> p.getGameMode()==GameMode.SURVIVAL).collect(Collectors.toList());
+
         if (alive.size() <= 1) {
-            pl.getServer().broadcastMessage("WOO!");
+            pl.getServer().broadcastMessage(ChatColor.RED +""+ ChatColor.BOLD + "Game over!");
             Main.setOff();
-            Player winner = alive.get(0);
-            pl.getServer().broadcastMessage(ChatColor.GOLD + winner.getDisplayName() + " has won!");
             PlayerDeathEvent.getHandlerList().unregister(pl);
+            if (!alive.isEmpty()) { //empty only if deathswap started with one person
+                Player winner = alive.get(0);
+                pl.getServer().broadcastMessage(ChatColor.GOLD +""+ ChatColor.BOLD + winner.getDisplayName() + ChatColor.RESET + " has won!");
+            }
         }
     }
 }
