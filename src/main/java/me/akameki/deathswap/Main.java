@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Main extends JavaPlugin {
-    private static List<BukkitRunnable> currentTasks = new ArrayList<>();
+    private static final List<BukkitRunnable> currentTasks = new ArrayList<>();
 
     public static boolean isOn() {
         return !currentTasks.isEmpty();
@@ -24,8 +24,9 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getCommand("start").setExecutor(new CommandStart(this));
-        getCommand("end").setExecutor(new CommandEnd(this));
+        Commands commands = new Commands(this);
+        getCommand("start").setExecutor(commands);
+        getCommand("end").setExecutor(commands);
     }
 
     @Override

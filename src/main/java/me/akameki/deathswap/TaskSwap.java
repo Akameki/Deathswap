@@ -3,22 +3,25 @@ package me.akameki.deathswap;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskSwap extends BukkitRunnable {
     private final JavaPlugin pl;
-    private int period;
-    private int variation;
+    private final int period;
+    private final int variation;
     private int count = 10;
 
     public TaskSwap(JavaPlugin pl) {
         this.pl = pl;
+        this.period = -1; //unused
+        this.variation = 0;
     }
     public TaskSwap(JavaPlugin pl, int period, int variation) {
         this.pl = pl;
@@ -49,17 +52,14 @@ public class TaskSwap extends BukkitRunnable {
                     pl.getServer().broadcastMessage(ChatColor.RED + "Swap!");
                     count = 10;
                     //swap players in random circle
-                    ArrayList<Player> players = new ArrayList<>();
-                    List<Location> locations = new ArrayList<>();
-                    for (Player player : pl.getServer().getOnlinePlayers()) {
-                        if (player.getGameMode().equals(GameMode.SURVIVAL)) {
-                            players.add(player);
-                        }
-                    }
+                    List<Player> players = pl.getServer().getOnlinePlayers().stream()
+                            .filter((player -> player.getGameMode()==GameMode.SURVIVAL))
+                            .collect(Collectors.toList());
                     Collections.shuffle(players);
-                    for (Player player : players) {
-                        locations.add(player.getLocation());
-                    }
+                    List<Location> locations = players.stream()
+                            .map(Entity::getLocation)
+                            .collect(Collectors.toList());
+
                     for (int i = 0; i < players.size(); i++) {
                         players.get(i).teleport(i==players.size()-1 ? locations.get(0) : locations.get(i+1));
                     }
